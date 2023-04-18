@@ -67,16 +67,17 @@ public class EmpController {
     //清理Session中的用户id
         request.getSession().removeAttribute("employee");
     //返回退出成功结果
-        return R.success("退出成功");
+        return R.success("退出成功...");
 
     }
 
     //新增员工功能
+
     @PostMapping
     public  R<String> addEmployee(HttpServletRequest request,@RequestBody Employee employee){
-        log.info("新增员工信息为:{}",employee.toString());
+        log.info("新增员工信息为: {}",employee.toString());
         empService.add(request,employee);
         empService.save(employee);
-        return R.success("新增员工成功");
+        return R.success("新增员工成功!");
     }
 }
