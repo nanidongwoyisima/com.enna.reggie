@@ -43,18 +43,22 @@ public class EmpController {
         LambdaQueryWrapper<Employee> queryWrapper=new LambdaQueryWrapper<>();
         queryWrapper.eq(Employee::getUsername,employee.getUsername());
         Employee emp = empService.getOne(queryWrapper);
+
         //如果没有查询到则返回登录失败结果
         if (emp==null){
             return  R.error("登录失败");
         }
+
         //如果密码不一致则返回登录失败结果
         if (!emp.getPassword().equals(password)){
             return  R.error("登录失败");
         }
+
         //如果员工状态为禁用,返回员工已禁用
         if (emp.getStatus()==0){
             return  R.error("该员工已经禁用");
         }
+
         //登录成功,将员工id存进session
         request.getSession().setAttribute("employee",emp.getId());
         return R.success(emp);
@@ -72,7 +76,6 @@ public class EmpController {
     }
 
     //新增员工功能
-
     @PostMapping
     public  R<String> addEmployee(HttpServletRequest request,@RequestBody Employee employee){
         log.info("新增员工信息为: {}",employee.toString());
