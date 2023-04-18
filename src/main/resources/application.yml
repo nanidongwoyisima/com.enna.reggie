@@ -1,0 +1,31 @@
+#springdatasource配置
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/reegie
+    username: root
+    password: 493486
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 100MB
+#mybatis配置
+mybatis:
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+    map-underscore-to-camel-case: true
+
+#阿里云配置
+aliyun:
+  oss:
+    endpoint: https://oss-cn-hangzhou.aliyuncs.com
+    accessKeyId: LTAI5tPYrwUKJjjXyUsLsWGu
+    accessKeySecret: wTqMZEZgsbuJpkpT2RNPXIo80TCOrY
+    bucketName: ennanews
+
+
+#spring事务管理日志
+logging:
+  level:
+    org.springframework.jdbc.support.JdbcTransactionManager: debug
+
