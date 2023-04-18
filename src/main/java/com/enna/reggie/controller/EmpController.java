@@ -67,7 +67,7 @@ public class EmpController {
     //清理Session中的用户id
         request.getSession().removeAttribute("employee");
     //返回退出成功结果
-        return R.success("退出成功...");
+        return R.success("退出成功....");
 
     }
 
