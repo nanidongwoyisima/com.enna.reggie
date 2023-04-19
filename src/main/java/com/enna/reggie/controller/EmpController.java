@@ -1,18 +1,17 @@
 package com.enna.reggie.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.enna.reggie.Utils.JwtUtils;
 import com.enna.reggie.common.R;
 import com.enna.reggie.pojo.Employee;
 import com.enna.reggie.service.EmpService;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.DigestUtils;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
@@ -43,7 +42,6 @@ public class EmpController {
         LambdaQueryWrapper<Employee> queryWrapper=new LambdaQueryWrapper<>();
         queryWrapper.eq(Employee::getUsername,employee.getUsername());
         Employee emp = empService.getOne(queryWrapper);
-
         //如果没有查询到则返回登录失败结果
         if (emp==null){
             return  R.error("登录失败");
@@ -83,4 +81,46 @@ public class EmpController {
         empService.save(employee);
         return R.success("新增员工成功!");
     }
+
+
+    //员工分页查询
+@GetMapping("/page")
+    public R<Page> page(String name,Integer page,Integer pageSize){
+
+    log.info("获取到的参数:page{},pageSize{},name{}",page,pageSize,name);
+
+    Page pageInfo=new Page(page,pageSize);
+
+    LambdaQueryWrapper<Employee> lambdaQueryWrapper=new LambdaQueryWrapper<>();
+
+    lambdaQueryWrapper.like(StringUtils.isNotEmpty(name),Employee::getName,name);
+
+    lambdaQueryWrapper.orderByDesc(Employee::getUpdateTime);
+
+    empService.page(pageInfo,lambdaQueryWrapper);
+
+    return R.success(pageInfo);
+    }
+    //员工状态修改
+    @PutMapping
+    public  R<String> update(HttpServletRequest request,@RequestBody Employee employee){
+    log.info("要修改的用户信息:{}",employee);
+    //调用service层实现数据修改
+    //empService.update(request,employee);
+    //MybatisPlus提供的方法
+    empService.updateById(employee);
+    return R.success("修改状态成功");
+    }
+
+    //员工信息编辑
+    @GetMapping("{id}")
+    public  R<Employee> getById(@PathVariable Long id){
+    log.info("员工信息编辑开始。。。");
+        Employee empServiceById = empService.getById(id);
+        if (empServiceById!=null){
+                return  R.success(empServiceById);
+        }
+        return R.error("未查询到员工信息。。。");
+    }
+
 }
