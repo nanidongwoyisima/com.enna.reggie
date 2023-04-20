@@ -6,10 +6,14 @@ import com.enna.reggie.common.R;
 import com.enna.reggie.pojo.Dish;
 import com.enna.reggie.pojo.Employee;
 import com.enna.reggie.service.DishService;
+import lombok.extern.java.Log;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import java.io.Serializable;
+import java.util.List;
 
 /**
  * Created with IntelliJ IDEA.
@@ -44,10 +48,9 @@ public class DishController {
 
     //
     @DeleteMapping
-    public R<String> delete( Long ids){
+    public R<String> deleteId(@RequestBody List<String> ids){
         log.info("分类管理删除开始。。。");
-
-        dishService.removeById(ids);
+        dishService.removeByIds(ids);
         return R.success("分类删除成功");
     }
 
