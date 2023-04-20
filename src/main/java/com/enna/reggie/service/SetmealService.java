@@ -1,16 +1,14 @@
 package com.enna.reggie.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.enna.reggie.pojo.Category;
+import com.enna.reggie.pojo.Setmeal;
 
 /**
  * Created with IntelliJ IDEA.
  *
  * @Author: 你的名字
- * @Date: 2023/04/20/10:31
+ * @Date: 2023/04/20/16:55
  * @Description:
  */
-public interface CategoryService extends IService<Category> {
-
-    public  void remove(Long id);
+public interface SetmealService extends IService<Setmeal> {
 }

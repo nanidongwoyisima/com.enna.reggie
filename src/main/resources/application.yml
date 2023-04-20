@@ -29,3 +29,7 @@ logging:
   level:
     org.springframework.jdbc.support.JdbcTransactionManager: debug
 
+
+reggie:
+  path: C:\image\
+

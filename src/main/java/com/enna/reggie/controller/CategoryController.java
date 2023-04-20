@@ -25,6 +25,7 @@ public class CategoryController {
     @Autowired
     private CategoryService categoryService;
 
+    //分类信息添加
     @PostMapping
     public R<String> save(@RequestBody Category category){
 
@@ -33,6 +34,8 @@ public class CategoryController {
 
     }
 
+
+    //分类信息分页查询
     @GetMapping("/page")
     public R<Page> page( Integer page, Integer pageSize){
 
@@ -49,15 +52,23 @@ public class CategoryController {
         return R.success(pageInfo);
     }
 
+
+    //分类信息修改
     @PutMapping
     public R<String> update(@RequestBody Category category){
             log.info("要修改的信息为:{}",category);
             categoryService.updateById(category);
             return  R.success("修改成功。。。");
     }
+
+    //分类信息删除
     @DeleteMapping
-    public R<Category> delete(@PathVariable Long id){
+    public R<String> delete( Long ids){
         log.info("分类管理删除开始。。。");
-        return R.error("删除失败...");
+
+       // categoryService.removeById(ids);
+
+        categoryService.remove(ids);
+        return R.success("分类信删除成功");
     }
 }
