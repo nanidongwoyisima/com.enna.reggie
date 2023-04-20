@@ -48,4 +48,16 @@ public class CategoryController {
 
         return R.success(pageInfo);
     }
+
+    @PutMapping
+    public R<String> update(@RequestBody Category category){
+            log.info("要修改的信息为:{}",category);
+            categoryService.updateById(category);
+            return  R.success("修改成功。。。");
+    }
+    @DeleteMapping
+    public R<Category> delete(@PathVariable Long id){
+        log.info("分类管理删除开始。。。");
+        return R.error("删除失败...");
+    }
 }
