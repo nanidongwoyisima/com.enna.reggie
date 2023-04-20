@@ -89,14 +89,16 @@ public class EmpController {
 
     log.info("获取到的参数:page{},pageSize{},name{}",page,pageSize,name);
 
-    Page pageInfo=new Page(page,pageSize);
+    Page<Employee> pageInfo=new Page<>(page,pageSize);
 
     LambdaQueryWrapper<Employee> lambdaQueryWrapper=new LambdaQueryWrapper<>();
 
     lambdaQueryWrapper.like(StringUtils.isNotEmpty(name),Employee::getName,name);
 
+    //根据最后修改时间进行排序处理
     lambdaQueryWrapper.orderByDesc(Employee::getUpdateTime);
 
+    //调用MybatisPlus中的page()进行传参排序
     empService.page(pageInfo,lambdaQueryWrapper);
 
     return R.success(pageInfo);
