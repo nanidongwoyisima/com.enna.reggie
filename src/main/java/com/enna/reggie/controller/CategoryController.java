@@ -11,6 +11,8 @@ import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 /**
  * Created with IntelliJ IDEA.
  *
@@ -70,5 +72,21 @@ public class CategoryController {
 
         categoryService.remove(ids);
         return R.success("分类信删除成功");
+    }
+
+    //新增套餐中菜品下拉框
+
+    @GetMapping("/list")
+    public  R<List<Category>> list(Category category){
+            //构造查询条件
+            LambdaQueryWrapper<Category> queryWrapper=new LambdaQueryWrapper<>();
+
+            queryWrapper.eq(category.getType()!=null,Category::getType,category.getType());
+
+            queryWrapper.orderByAsc(Category::getSort).orderByDesc(Category::getUpdateTime);
+
+            List<Category> categoryList = categoryService.list(queryWrapper);
+
+            return R.success(categoryList);
     }
 }
