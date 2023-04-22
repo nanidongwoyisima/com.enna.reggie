@@ -2,12 +2,11 @@ package com.enna.reggie.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.enna.reggie.common.CustomException;
 import com.enna.reggie.dto.DishDto;
 import com.enna.reggie.mapper.CategoryMapper;
 import com.enna.reggie.mapper.DishMapper;
-import com.enna.reggie.pojo.Category;
-import com.enna.reggie.pojo.Dish;
-import com.enna.reggie.pojo.DishFlavor;
+import com.enna.reggie.pojo.*;
 import com.enna.reggie.service.CategoryService;
 import com.enna.reggie.service.DishFlavorService;
 import com.enna.reggie.service.DishService;
@@ -95,6 +94,28 @@ public class DishServiceImpl extends ServiceImpl<DishMapper, Dish> implements Di
         }).collect(Collectors.toList());
 
         dishFlavorService.saveBatch(flavors);
+    }
+
+    @Override
+    public void delete(List<Long> ids) {
+        //查询套餐状态是否可以删除
+        LambdaQueryWrapper<Dish> queryWrapper=new LambdaQueryWrapper<>();
+        queryWrapper.in(Dish::getId,ids);
+        queryWrapper.eq(Dish::getStatus,1);
+        int count=this.count(queryWrapper);
+        if (count>0){
+            throw new CustomException("当前套餐正在售卖，无法删除！！！！");
+        }
+
+        //可以正常删除
+        //先删Setmeal中的数据
+        this.removeByIds(ids);
+
+        //后删关联的数据
+        //继续构造条件
+        LambdaQueryWrapper<DishFlavor> queryWrapper1=new LambdaQueryWrapper<>();
+        queryWrapper1.in(DishFlavor::getDishId,ids);
+        dishFlavorService.remove(queryWrapper1);
     }
 
 }

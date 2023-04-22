@@ -1,6 +1,7 @@
 package com.enna.reggie.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.enna.reggie.common.R;
 import com.enna.reggie.dto.DishDto;
@@ -18,6 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.Serializable;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -83,11 +85,11 @@ public class DishController {
             return  R.success(dishDtoPage);
     }
 
-    //
+    // 批量删除操作
     @DeleteMapping
-    public R<String> deleteId(@RequestBody List<Integer> ids){
-        log.info("分类管理删除开始。。。");
-        dishService.removeByIds(ids);
+    public R<String> deleteId(@RequestParam List<Long> ids){
+        log.info("分类管理删除开始。id为:{}",ids);
+        dishService.delete(ids);
         return R.success("分类删除成功");
     }
 
@@ -98,6 +100,8 @@ public class DishController {
         return  R.success("操作成功!");
     }
 
+
+    //通过id回显数据
     @GetMapping("/{id}")
     public  R<DishDto> getId(@PathVariable  Long id){
         log.info("修改的菜品id为：{}",id);
@@ -107,10 +111,37 @@ public class DishController {
         return R.success(dishDto);
     }
 
+    //修改数据操作
     @PutMapping
     public R<String> update(@RequestBody DishDto dishDto){
         dishService.updateByIdFlavor(dishDto);
         return  R.success("修改成功!");
     }
+
+    @GetMapping("/list")
+    public  R<List<Dish>> list(Dish dish){
+        LambdaQueryWrapper<Dish> queryWrapper=new LambdaQueryWrapper<>();
+        queryWrapper.eq(dish.getCategoryId()!=null,Dish::getCategoryId,dish.getCategoryId());
+        queryWrapper.orderByAsc(Dish::getSort).orderByDesc(Dish::getUpdateTime);
+        queryWrapper.eq(Dish::getStatus,1);
+        List<Dish> list = dishService.list(queryWrapper);
+
+        return R.success(list);
+    }
+
+    // 批量起售和停售
+    @PostMapping("/status/{status}")
+    public R<String> updateStatus(Long[] ids,@PathVariable int status){
+        //将数组转为集合
+        List<Long> idsList = Arrays.asList(ids);
+        //创建更新的条件构造器
+        LambdaUpdateWrapper<Dish> queryWrapper = new LambdaUpdateWrapper<>();
+        //设置修改状态和条件
+        queryWrapper.set(Dish::getStatus,status).in(Dish::getId,idsList);
+        //执行更新操作
+        dishService.update(queryWrapper);
+        return R.success("操作成功！");
+    }
+
 
 }

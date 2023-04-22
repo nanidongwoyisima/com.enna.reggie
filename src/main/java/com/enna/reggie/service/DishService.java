@@ -5,6 +5,8 @@ import com.enna.reggie.dto.DishDto;
 import com.enna.reggie.pojo.Dish;
 import com.enna.reggie.pojo.Employee;
 
+import java.util.List;
+
 /**
  * Created with IntelliJ IDEA.
  *
@@ -19,4 +21,6 @@ public interface DishService extends IService<Dish> {
     public DishDto getByIdFlavor(Long id);
 
     void updateByIdFlavor(DishDto dishDto);
+
+    void delete(List<Long> ids);
 }
