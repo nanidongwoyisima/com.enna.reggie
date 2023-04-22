@@ -15,4 +15,8 @@ import com.enna.reggie.pojo.Employee;
 public interface DishService extends IService<Dish> {
 
     public void savaFlavor(DishDto dishDto);
+
+    public DishDto getByIdFlavor(Long id);
+
+    void updateByIdFlavor(DishDto dishDto);
 }

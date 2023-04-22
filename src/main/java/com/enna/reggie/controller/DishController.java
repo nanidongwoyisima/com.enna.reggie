@@ -91,12 +91,26 @@ public class DishController {
         return R.success("分类删除成功");
     }
 
-
     @PostMapping
     public R<String> sava(@RequestBody DishDto dishDto){
         log.info("新增信息:{}",dishDto);
         dishService.savaFlavor(dishDto);
         return  R.success("操作成功!");
+    }
+
+    @GetMapping("/{id}")
+    public  R<DishDto> getId(@PathVariable  Long id){
+        log.info("修改的菜品id为：{}",id);
+
+        DishDto dishDto = dishService.getByIdFlavor(id);
+
+        return R.success(dishDto);
+    }
+
+    @PutMapping
+    public R<String> update(@RequestBody DishDto dishDto){
+        dishService.updateByIdFlavor(dishDto);
+        return  R.success("修改成功!");
     }
 
 }
