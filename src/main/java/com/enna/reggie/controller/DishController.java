@@ -7,6 +7,7 @@ import com.enna.reggie.common.R;
 import com.enna.reggie.dto.DishDto;
 import com.enna.reggie.pojo.Category;
 import com.enna.reggie.pojo.Dish;
+import com.enna.reggie.pojo.DishFlavor;
 import com.enna.reggie.pojo.Employee;
 import com.enna.reggie.service.CategoryService;
 import com.enna.reggie.service.DishFlavorService;
@@ -118,15 +119,53 @@ public class DishController {
         return  R.success("修改成功!");
     }
 
+//    @GetMapping("/list")
+//    public  R<List<Dish>> list(Dish dish){
+//        LambdaQueryWrapper<Dish> queryWrapper=new LambdaQueryWrapper<>();
+//        queryWrapper.eq(dish.getCategoryId()!=null,Dish::getCategoryId,dish.getCategoryId());
+//        queryWrapper.orderByAsc(Dish::getSort).orderByDesc(Dish::getUpdateTime);
+//        queryWrapper.eq(Dish::getStatus,1);
+//        List<Dish> list = dishService.list(queryWrapper);
+//
+//        return R.success(list);
+//    }
+
     @GetMapping("/list")
-    public  R<List<Dish>> list(Dish dish){
+    public  R<List<DishDto>> list(Dish dish){
+        //构造查询条件
         LambdaQueryWrapper<Dish> queryWrapper=new LambdaQueryWrapper<>();
+        //select * from Dish where dish_category_id=?
         queryWrapper.eq(dish.getCategoryId()!=null,Dish::getCategoryId,dish.getCategoryId());
         queryWrapper.orderByAsc(Dish::getSort).orderByDesc(Dish::getUpdateTime);
+        //select * from Dish where Status=1
         queryWrapper.eq(Dish::getStatus,1);
         List<Dish> list = dishService.list(queryWrapper);
+        List<DishDto> dishDtoList=list.stream().map((enna)->{
+            DishDto dishDto=new DishDto();
 
-        return R.success(list);
+            BeanUtils.copyProperties(enna,dishDto);
+
+            Long categoryId = enna.getCategoryId(); //分类id
+            //通过id获取到菜品分类名称
+            Category category = categoryService.getById(categoryId);
+            //做条件判断
+            if (category!=null) {
+                String categoryName = category.getName();
+                //对DishDto中CategoryName赋值
+                dishDto.setCategoryName(categoryName);
+            }
+            Long ennaId = enna.getId();//从enna中活得id
+            //构造条件查询
+            LambdaQueryWrapper<DishFlavor> dtoLambdaQueryWrapper=new LambdaQueryWrapper<>();
+            dtoLambdaQueryWrapper.eq(DishFlavor::getDishId,ennaId);
+            // select * from dish_flavor where dish_id=?
+            List<DishFlavor> dishFlavorList = dishFlavorService.list(dtoLambdaQueryWrapper);
+            //赋值
+            dishDto.setFlavors(dishFlavorList);
+            return dishDto;
+        }).collect(Collectors.toList());
+
+        return R.success(dishDtoList);
     }
 
     // 批量起售和停售
