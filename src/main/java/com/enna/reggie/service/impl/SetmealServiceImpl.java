@@ -75,6 +75,7 @@ public class SetmealServiceImpl extends ServiceImpl<SetmealMapper, Setmeal> impl
     }
 
     @Override
+    // 新增套餐
     public void savaDish(SetmealDto setmealDto) {
         this.save(setmealDto);
         Long setmealDtoId = setmealDto.getId();
@@ -87,6 +88,7 @@ public class SetmealServiceImpl extends ServiceImpl<SetmealMapper, Setmeal> impl
 
     }
 
+    //修改套餐信息
     @Override
     public SetmealDto getByIdDish(Long id) {
 //        //回显菜品信息
