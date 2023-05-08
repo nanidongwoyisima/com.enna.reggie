@@ -22,6 +22,9 @@ spring:
         max-wait: 1ms  #连接池最大堵塞时间
         max-idle: 4  #连接池中最大空闲链接
         min-idle: 0 #连接池中最小空闲链接
+  cache:
+    redis:
+      time-to-live: 1800000 #设置缓存过期时间
 
 #mybatis配置
 mybatis:
