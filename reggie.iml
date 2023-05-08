@@ -105,6 +105,8 @@
     <orderEntry type="library" name="Maven: org.reactivestreams:reactive-streams:1.0.4" level="project" />
     <orderEntry type="library" name="Maven: com.aliyun:aliyun-java-auth:0.1.11-beta" level="project" />
     <orderEntry type="library" name="Maven: org.bouncycastle:bcprov-jdk15on:1.70" level="project" />
+    <orderEntry type="library" name="Maven: org.springframework.boot:spring-boot-starter-cache:2.7.10" level="project" />
+    <orderEntry type="library" name="Maven: org.springframework:spring-context-support:5.3.26" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: org.springframework.boot:spring-boot-starter-test:2.7.10" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: org.springframework.boot:spring-boot-test:2.7.10" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: org.springframework.boot:spring-boot-test-autoconfigure:2.7.10" level="project" />
@@ -141,7 +143,6 @@
     <orderEntry type="library" name="Maven: org.springframework.data:spring-data-commons:2.7.10" level="project" />
     <orderEntry type="library" name="Maven: org.springframework:spring-tx:5.3.26" level="project" />
     <orderEntry type="library" name="Maven: org.springframework:spring-oxm:5.3.26" level="project" />
-    <orderEntry type="library" name="Maven: org.springframework:spring-context-support:5.3.26" level="project" />
     <orderEntry type="library" name="Maven: io.lettuce:lettuce-core:6.1.10.RELEASE" level="project" />
     <orderEntry type="library" name="Maven: io.netty:netty-common:4.1.90.Final" level="project" />
     <orderEntry type="library" name="Maven: io.netty:netty-handler:4.1.90.Final" level="project" />

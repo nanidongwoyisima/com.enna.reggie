@@ -15,6 +15,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Arrays;
@@ -89,6 +91,7 @@ public class SetmealController {
 
 
     @PostMapping
+    @CacheEvict(value = "setmealCache",allEntries = true)
     public R<String> sava(@RequestBody SetmealDto setmealDto){
         log.info("新增信息:{}",setmealDto);
         setmealService.savaDish(setmealDto);
@@ -98,13 +101,12 @@ public class SetmealController {
     @GetMapping("/{id}")
     public  R<SetmealDto> getId(@PathVariable  Long id){
         log.info("修改的菜品id为：{}",id);
-
         SetmealDto setmealDto = setmealService.getByIdDish(id);
-
         return R.success(setmealDto);
     }
 
     @PutMapping
+    @CacheEvict(value = "setmealCache",allEntries = true)
     public R<String> update(@RequestBody SetmealDto setmealDto){
         setmealService.updateByIdDish(setmealDto);
         return  R.success("修改成功!");
@@ -112,6 +114,7 @@ public class SetmealController {
 
     // 批量起售和停售
     @PostMapping("/status/{status}")
+    @CacheEvict(value = "setmealCache",allEntries = true)
     public R<String> updateStatus(Long[] ids,@PathVariable int status){
         //将数组转为集合
         List<Long> idsList = Arrays.asList(ids);
@@ -125,6 +128,7 @@ public class SetmealController {
     }
 
     @GetMapping("/list")
+    @Cacheable(value="setmealCache",key="#setmeal.categoryId+'_'+#setmeal.status")
     public  R<List<Setmeal>> list( Setmeal setmeal){
         LambdaQueryWrapper<Setmeal> queryWrapper=new LambdaQueryWrapper<>();
         queryWrapper.eq(setmeal.getCategoryId()!=null,Setmeal::getCategoryId,setmeal.getCategoryId());
