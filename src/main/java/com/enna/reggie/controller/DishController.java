@@ -98,7 +98,7 @@ public class DishController {
         dishService.delete(ids);
         return R.success("分类删除成功");
     }
-
+    //新增菜品信息
     @PostMapping
     public R<String> sava(@RequestBody DishDto dishDto){
         log.info("新增信息:{}",dishDto);
